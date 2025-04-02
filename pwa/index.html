@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma PWA Minimale</title>
+    <meta name="description" content="Une application web progressive minimale">
+    
+    <!-- Liens vers les icônes -->
+    <link rel="icon" type="image/png" sizes="196x196" href="icon-196.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180.png">
+    
+    <!-- Liens vers le manifest.json -->
+    <link rel="manifest" href="manifest.json">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #4285f4;
+        }
+        .install-button {
+            display: none;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ma PWA Minimale</h1>
+    <p>Cette application peut être installée sur votre appareil</p>
+    <button class="install-button" id="installButton">Installer l'application</button>
+
+    <script>
+        // Variable pour stocker l'événement d'installation
+        let deferredPrompt;
+        const installButton = document.getElementById('installButton');
+
+        // Écouter l'événement beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Empêcher Chrome de montrer automatiquement l'invite d'installation
+            e.preventDefault();
+            // Stocker l'événement pour l'utiliser plus tard
+            deferredPrompt = e;
+            // Afficher le bouton d'installation
+            installButton.style.display = 'block';
+        });
+
+        // Gérer le clic sur le bouton d'installation
+        installButton.addEventListener('click', async () => {
+            if (!deferredPrompt) {
+                return;
+            }
+            // Montrer l'invite d'installation
+            deferredPrompt.prompt();
+            // Attendre la décision de l'utilisateur
+            const { outcome } = await deferredPrompt.userChoice;
+            // On n'a plus besoin de l'événement
+            deferredPrompt = null;
+            // Cacher le bouton d'installation
+            installButton.style.display = 'none';
+        });
+
+        // Enregistrer le service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('Service Worker enregistré avec succès:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Échec d\'enregistrement du Service Worker:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
