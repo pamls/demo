@@ -3,15 +3,8 @@ const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
-  './icon-72.png',
-  './icon-96.png',
-  './icon-128.png',
-  './icon-144.png',
-  './icon-152.png',
-  './icon-192.png',
-  './icon-384.png',
-  './icon-512.png',
-  './apple-icon-180.png'
+  './favicon-96x96.png',
+  './apple-touch-icon.png'
 ];
 
 // Installation du service worker
